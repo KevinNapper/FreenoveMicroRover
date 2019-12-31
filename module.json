@@ -1,0 +1,16 @@
+{
+  "name": "freenove-micro-rover",
+  "version": "0.0.0",
+  "description": "Freenove Micro Rover",
+  "keywords": [],
+  "author": "K.R.Napper",
+  "license": "GPL3",
+  "dependencies": {
+    "microbit": "lancaster-university/microbit#v2.1.1"
+  },
+  "extraIncludes": [
+    "inc"
+  ],
+  "targetDependencies": {},
+  "bin": "./source"
+}
