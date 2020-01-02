@@ -22,32 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef FREENOVE_MICRO_ROVER_H
-#define FREENOVE_MICRO_ROVER_H
+#ifndef MICRO_BIT_SOUNDER_H
+#define MICRO_BIT_SOUNDER_H
 
-#include "MicroBit.h"
-#include "FreenoveMicroRoverLED.h"
-#include "FreenoveMicroRoverMotor.h"
-#include "MicroBitSounder.h"
+#include "MicroBitPin.h"
 
-class FreenoveMicroRover : public MicroBit
+class MicroBitSounder
 {
-    private:
-        static const uint8_t address = 0x43 << 1;
-        PCA9685 pwmController;
-        FreenoveMicroRoverLED led[4];
-        FreenoveMicroRoverMotor leftMotor;
-        FreenoveMicroRoverMotor rightMotor;
-        MicroBitSounder sounder;
-
     public:
 
-        FreenoveMicroRover();
-        int SetLED(float brightness, float R, float G, float B, uint8_t bitField = 0xff);
-        int SetMotors(float leftSpeed, float rightSpeed);
-        int PlaySound(int frequency, int duration_ms);
+    MicroBitSounder(MicroBitPin& pin);
+    int Play(int frequency, int duration_ms);
 
-    static ManagedString getName() {return "FreenoveMicroRover:" + MicroBit::getName();}
+    private:
+
+    MicroBitPin&    pin;
 };
 
 #endif

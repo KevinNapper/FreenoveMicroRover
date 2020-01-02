@@ -32,7 +32,8 @@ FreenoveMicroRover::FreenoveMicroRover() :
          FreenoveMicroRoverLED(pwmController,2),
          FreenoveMicroRoverLED(pwmController,3)}),
     leftMotor(pwmController,0,1),
-    rightMotor(pwmController,2,3)
+    rightMotor(pwmController,2,3),
+    sounder(io.pin[0])
 {
 
 }
@@ -57,3 +58,8 @@ int FreenoveMicroRover::SetMotors(float leftSpeed, float rightSpeed)
     return 0;
 }
 
+int FreenoveMicroRover::PlaySound(int frequency, int duration_ms)
+{
+    sounder.Play(frequency,duration_ms);
+    return 0;
+}

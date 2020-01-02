@@ -32,6 +32,9 @@ int main()
         rover.SetMotors(0,-1);
         rover.sleep(1000);
         rover.SetMotors(0,0);
+
+        rover.PlaySound(300,1000);
+        rover.PlaySound(150,1000);
     }
 }
 
