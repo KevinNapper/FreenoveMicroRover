@@ -22,32 +22,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef FREENOVE_MICRO_ROVER_H
-#define FREENOVE_MICRO_ROVER_H
-
-#include "MicroBit.h"
-#include "FreenoveMicroRoverLED.h"
-#include "FreenoveMicroRoverMotor.h"
 #include "MicroBitSounder.h"
+#include "MicroBitFiber.h"
 
-class FreenoveMicroRover : public MicroBit
+MicroBitSounder::MicroBitSounder(MicroBitPin& pin) : pin(pin)
 {
-    private:
-        static const uint8_t address = 0x43 << 1;
-        PCA9685 pwmController;
-        FreenoveMicroRoverLED led[4];
-        FreenoveMicroRoverMotor leftMotor;
-        FreenoveMicroRoverMotor rightMotor;
-        MicroBitSounder sounder;
 
-    public:
+}
 
-        FreenoveMicroRover();
-        int SetLED(float brightness, float R, float G, float B, uint8_t bitField = 0xff);
-        int SetMotors(float leftSpeed, float rightSpeed);
-        int PlaySound(int frequency, int duration_ms);
+int MicroBitSounder::Play(int frequency, int duration_ms)
+{
+    if (frequency <= 0)
+    {
+        pin.setAnalogValue(0);
+    }
+    else
+    {
+        pin.setAnalogValue(512);
+        pin.setAnalogPeriodUs(1000000/frequency);
+    }
 
-    static ManagedString getName() {return "FreenoveMicroRover:" + MicroBit::getName();}
-};
+    if (duration_ms > 0)
+    {
+        fiber_sleep(duration_ms);
+        pin.setAnalogValue(0);
+        wait_ms(5);
+    }
 
-#endif
+    return 0;
+}
+
+

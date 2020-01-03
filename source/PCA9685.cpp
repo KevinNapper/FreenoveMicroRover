@@ -34,10 +34,8 @@ PCA9685::PCA9685(MicroBitI2C& i2c, uint8_t address) :
     SetPWM(0,0);
     i2c.writeRegister(address,1,4);
     i2c.writeRegister(address,0,1);
-//    fiber_sleep(5);
     uint8_t val = i2c.readRegister(address,0) & ~0x10;
     i2c.writeRegister(address,0,val);
-//    fiber_sleep(5);
 }
 
 int PCA9685::SetPWM(uint16_t on, uint16_t off, int channel)
