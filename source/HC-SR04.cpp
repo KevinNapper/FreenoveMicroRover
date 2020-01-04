@@ -22,35 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef FREENOVE_MICRO_ROVER_H
-#define FREENOVE_MICRO_ROVER_H
-
-#include "MicroBit.h"
-#include "FreenoveMicroRoverLED.h"
-#include "FreenoveMicroRoverMotor.h"
-#include "MicroBitSounder.h"
 #include "HC-SR04.h"
 
-class FreenoveMicroRover : public MicroBit
+HC_SR04::HC_SR04(MicroBitPin& trigger, MicroBitPin& echo) :
+    trigger(trigger),
+    echo(echo)
 {
-    private:
-        static const uint8_t address = 0x43 << 1;
-        PCA9685 pwmController;
-        FreenoveMicroRoverLED led[4];
-        FreenoveMicroRoverMotor leftMotor;
-        FreenoveMicroRoverMotor rightMotor;
-        MicroBitSounder sounder;
-        HC_SR04 ranger;
 
-    public:
+}
 
-        FreenoveMicroRover();
-        int SetLED(float brightness, float R, float G, float B, uint8_t bitField = 0xff);
-        int SetMotors(float leftSpeed, float rightSpeed);
-        int PlaySound(int frequency, int duration_ms);
-        int GetRange();
+int HC_SR04::getDistance(int pulseWidthuS)
+{
+    trigger.setDigitalValue(1);
+    wait_us(pulseWidthuS);
+    trigger.setDigitalValue(0);
 
-    static ManagedString getName() {return "FreenoveMicroRover:" + MicroBit::getName();}
-};
+    while (echo.getDigitalValue() == 0) {}
+    uint32_t start = us_ticker_read();
+    while (echo.getDigitalValue() == 1) {}
+    uint32_t end = us_ticker_read();
 
-#endif
+    static const float SPEED_OF_SOUND_mm_us = 0.343;
+    return (float)(end-start)/2 * SPEED_OF_SOUND_mm_us;
+}
+
