@@ -48,7 +48,8 @@ class FreenoveMicroRover : public MicroBit
         int SetLED(float brightness, float R, float G, float B, uint8_t bitField = 0xff);
         int SetMotors(float leftSpeed, float rightSpeed);
         int PlaySound(int frequency, int duration_ms);
-        int GetRange();
+        void DetermineRange();
+        int ReadRange();
 
     static ManagedString getName() {return "FreenoveMicroRover:" + MicroBit::getName();}
 };

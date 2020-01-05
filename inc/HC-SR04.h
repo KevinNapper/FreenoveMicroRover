@@ -26,18 +26,26 @@ SOFTWARE.
 #define HC_SR04_H
 
 #include "MicroBitIO.h"
+#include "MicroBitMessageBus.h"
 
 class HC_SR04
 {
     public:
 
-    HC_SR04(MicroBitPin& trigger, MicroBitPin& echo);
-    int getDistance(int pulseWidthuS = 15);
+    HC_SR04(MicroBitPin& trigger, MicroBitPin& echo, MicroBitMessageBus& msgBus, uint16_t echoEventId);
+    void determineDistance(int pulseWidthuS = 15);
+    int readDistance();
 
     private:
 
-    MicroBitPin&    trigger;
-    MicroBitPin&    echo;
+    MicroBitPin&        trigger;
+    MicroBitPin&        echo;
+    MicroBitMessageBus& msgBus;
+    uint32_t            start, end, distance;
+    uint16_t            echoEventId;
+
+    void echoStart(MicroBitEvent e);
+    void echoEnd(MicroBitEvent e);
 };
 
 #endif

@@ -47,8 +47,9 @@ int main()
         uint32_t distance = ((end-start)*170)*0.0001;
         rover.serial.printf("%d %d %d\r\n", start, end, distance);
 #endif
-        rover.serial.printf("%d\r\n", rover.GetRange());
-
+        rover.DetermineRange();
+        rover.sleep(100);
+        rover.serial.printf("%d\r\n", rover.ReadRange());
     }
 }
 

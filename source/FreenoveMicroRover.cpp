@@ -33,8 +33,8 @@ FreenoveMicroRover::FreenoveMicroRover() :
          FreenoveMicroRoverLED(pwmController,3)}),
     leftMotor(pwmController,0,1),
     rightMotor(pwmController,2,3),
-    sounder(io.pin[0]),
-    ranger(io.P12,io.P13)
+    sounder(io.P0),
+    ranger(io.P12,io.P13,messageBus,MICROBIT_ID_IO_P13)
 {
 
 }
@@ -65,10 +65,12 @@ int FreenoveMicroRover::PlaySound(int frequency, int duration_ms)
     return 0;
 }
 
-int FreenoveMicroRover::GetRange()
+void FreenoveMicroRover::DetermineRange()
 {
-    uint32_t start;
-    uint32_t end;
-    int dist = ranger.getDistance();
-    return dist;
+    ranger.determineDistance();
+}
+
+int FreenoveMicroRover::ReadRange()
+{
+    return ranger.readDistance();
 }

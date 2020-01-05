@@ -24,25 +24,47 @@ SOFTWARE.
 
 #include "HC-SR04.h"
 
-HC_SR04::HC_SR04(MicroBitPin& trigger, MicroBitPin& echo) :
+HC_SR04::HC_SR04(MicroBitPin& trigger, MicroBitPin& echo, MicroBitMessageBus& msgBus, uint16_t echoEventId) :
     trigger(trigger),
-    echo(echo)
+    echo(echo),
+    msgBus(msgBus),
+    start(0),
+    end(0),
+    distance(0),
+    echoEventId(echoEventId)
 {
+    // Enable event monitoring on the echo pin
+    echo.eventOn(MICROBIT_PIN_EVENT_ON_EDGE);
 
+    // Set up listeners for the start and end events on the echo pin
+    msgBus.listen(echoEventId,MICROBIT_PIN_EVT_RISE,this,&HC_SR04::echoStart,MESSAGE_BUS_LISTENER_IMMEDIATE);
+    msgBus.listen(echoEventId,MICROBIT_PIN_EVT_FALL,this,&HC_SR04::echoEnd,MESSAGE_BUS_LISTENER_IMMEDIATE);  
 }
 
-int HC_SR04::getDistance(int pulseWidthuS)
+void HC_SR04::determineDistance(int pulseWidthuS)
 {
+    // Send a pulse
     trigger.setDigitalValue(1);
     wait_us(pulseWidthuS);
     trigger.setDigitalValue(0);
-
-    while (echo.getDigitalValue() == 0) {}
-    uint32_t start = us_ticker_read();
-    while (echo.getDigitalValue() == 1) {}
-    uint32_t end = us_ticker_read();
-
-    static const float SPEED_OF_SOUND_mm_us = 0.343;
-    return (float)(end-start)/2 * SPEED_OF_SOUND_mm_us;
 }
 
+int HC_SR04::readDistance()
+{
+    return distance;
+}
+
+void HC_SR04::echoStart(MicroBitEvent)
+{
+    start = us_ticker_read();
+}
+
+void HC_SR04::echoEnd(MicroBitEvent)
+{
+    end = us_ticker_read();
+
+    // Distance is half the time taken to get "there" and "back"
+    // multiplied by the speed of sound.
+    static const float SPEED_OF_SOUND_mm_us = 0.343;
+    distance = (float)(end-start)/2 * SPEED_OF_SOUND_mm_us;
+}
