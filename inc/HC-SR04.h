@@ -22,36 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef FREENOVE_MICRO_ROVER_H
-#define FREENOVE_MICRO_ROVER_H
+#ifndef HC_SR04_H
+#define HC_SR04_H
 
-#include "MicroBit.h"
-#include "FreenoveMicroRoverLED.h"
-#include "FreenoveMicroRoverMotor.h"
-#include "MicroBitSounder.h"
-#include "HC-SR04.h"
+#include "MicroBitIO.h"
+#include "MicroBitMessageBus.h"
 
-class FreenoveMicroRover : public MicroBit
+class HC_SR04
 {
-    private:
-        static const uint8_t address = 0x43 << 1;
-        PCA9685 pwmController;
-        FreenoveMicroRoverLED led[4];
-        FreenoveMicroRoverMotor leftMotor;
-        FreenoveMicroRoverMotor rightMotor;
-        MicroBitSounder sounder;
-        HC_SR04 ranger;
-
     public:
 
-        FreenoveMicroRover();
-        int SetLED(float brightness, float R, float G, float B, uint8_t bitField = 0xff);
-        int SetMotors(float leftSpeed, float rightSpeed);
-        int PlaySound(int frequency, int duration_ms);
-        void DetermineRange();
-        int ReadRange();
+    HC_SR04(MicroBitPin& trigger, MicroBitPin& echo, MicroBitMessageBus& msgBus, uint16_t echoEventId);
+    void determineDistance(int pulseWidthuS = 15);
+    int readDistance();
 
-    static ManagedString getName() {return "FreenoveMicroRover:" + MicroBit::getName();}
+    private:
+
+    MicroBitPin&        trigger;
+    MicroBitPin&        echo;
+    MicroBitMessageBus& msgBus;
+    uint32_t            start, end, distance;
+    uint16_t            echoEventId;
+
+    void echoStart(MicroBitEvent e);
+    void echoEnd(MicroBitEvent e);
 };
 
 #endif
