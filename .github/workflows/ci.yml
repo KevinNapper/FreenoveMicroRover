@@ -20,4 +20,4 @@ jobs:
       - name: Doxygen
         uses: docker://hrektts/doxygen
         with:
-          entrypoint: docker
+          entrypoint: doxygen
