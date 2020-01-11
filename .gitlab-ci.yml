@@ -11,6 +11,6 @@ documentation:
   stage: build
   image: hrektts/doxygen
   script:
-    - doxygen -g
-    - cat Doxyfile
+    - doxygen
+    - ls
     
