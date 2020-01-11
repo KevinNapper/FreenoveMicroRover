@@ -12,7 +12,10 @@ jobs:
         with:
           entrypoint: yotta
           args: build
-      - name: Documentation
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Doxygen
         uses: docker://hrektts/doxygen
         with:
           entrypoint: docker
