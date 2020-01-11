@@ -1,5 +1,6 @@
 stages:
   - build
+  - publish
 
 build:
   stage: build
@@ -12,5 +13,16 @@ documentation:
   image: hrektts/doxygen
   script:
     - doxygen
-    - ls
-    
+    - ls doc
+  artifacts:
+    paths:
+    - doc/html/
+
+pages:
+  stage: publish
+  image: alpine
+  script:
+    - mv doc/html/ public/
+  artifacts:
+    paths:
+    - public
