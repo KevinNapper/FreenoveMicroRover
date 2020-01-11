@@ -5,7 +5,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: My first step
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
         uses: docker://mbed/yotta
         with:
           entrypoint: yotta
