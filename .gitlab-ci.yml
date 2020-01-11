@@ -8,6 +8,7 @@ build:
   script:
     - yt build
   artifacts:
+    paths:
     - build/bbc-microbit-classic-gcc/source/freenove-micro-rover-combined.hex
 
 documentation:
