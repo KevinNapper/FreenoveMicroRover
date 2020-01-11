@@ -12,3 +12,7 @@ jobs:
         with:
           entrypoint: yotta
           args: build
+      - name Documentation
+        uses: docker://hrektts/doxygen
+        with:
+          entrypoint: docker
