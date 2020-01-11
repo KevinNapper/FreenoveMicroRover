@@ -1,0 +1,6 @@
+image: mbed/yotta
+
+build:
+  stage: build
+  script:
+    - yt build
