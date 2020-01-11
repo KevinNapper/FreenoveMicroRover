@@ -8,5 +8,5 @@ jobs:
       - name: My first step
         uses: docker://mbed/yotta
         with:
-          entrypoint: /bin/sh
-          args: yt build
+          entrypoint: yotta
+          args: build
