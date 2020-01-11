@@ -7,6 +7,8 @@ build:
   image: mbed/yotta
   script:
     - yt build
+  artifacts:
+    - build/bbc-microbit-classic-gcc/source/freenove-micro-rover-combined.hex
 
 documentation:
   stage: build
