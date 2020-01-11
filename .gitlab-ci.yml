@@ -12,5 +12,5 @@ documentation:
   image: hrektts/doxygen
   script:
     - doxygen -g
-    - echo Doxyfile
+    - cat Doxyfile
     
