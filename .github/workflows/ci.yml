@@ -12,6 +12,11 @@ jobs:
         with:
           entrypoint: yotta
           args: build
+      - name: Retain artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: hexfile
+          path: build/bbc-microbit-classic-gcc/source/freenove-micro-rover-combined.hex 
   documentation:
     runs-on: ubuntu-latest
     steps:
