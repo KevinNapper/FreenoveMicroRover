@@ -1,7 +1,7 @@
 /*  
 MIT License
 
-Copyright (c) 2019 Kevin Napper
+Copyright (c) 2019-2020 Kevin Napper
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,8 @@ class HC_SR04
 
     HC_SR04(MicroBitPin& trigger, MicroBitPin& echo, MicroBitMessageBus& msgBus, uint16_t echoEventId);
     void determineDistance(int pulseWidthuS = 15);
-    int readDistance();
+    bool distanceAvailable() const;
+    int readDistance() const;
 
     private:
 
@@ -42,6 +43,7 @@ class HC_SR04
     MicroBitPin&        echo;
     MicroBitMessageBus& msgBus;
     uint32_t            start, end, distance;
+    bool                distanceSet;
     uint16_t            echoEventId;
 
     void echoStart(MicroBitEvent e);

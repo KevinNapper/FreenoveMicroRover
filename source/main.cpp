@@ -1,3 +1,26 @@
+/*  
+MIT License
+
+Copyright (c) 2019-2020 Kevin Napper
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 #include "FreenoveMicroRover.h"
 
@@ -10,46 +33,37 @@ int main()
 
     while (true) 
     {
-#if 0
-        int i = 0;
-        for (float b = 0 ; b < 1 ; b += 0.01)
+        // If obsticles are far away then full speed
+        if (rover.getRange() > 400)
         {
-            rover.SetLED(b,
-                        (double)rand() / (double)RAND_MAX,
-                        (double)rand() / (double)RAND_MAX,
-                        (double)rand() / (double)RAND_MAX,
-                        1 << i);
-            rover.SetLED(0,0,0,0,~(1 << i));
-            if (++i >= 4) i = 0;
-            rover.sleep(30);
+            rover.SetLED(1,0,1,0,0xff);
+            rover.SetMotors(1,1);
+            rover.sleep(50);
         }
-
-        rover.SetMotors(1,0);
-        rover.sleep(1000);
-        rover.SetMotors(-1,0);
-        rover.sleep(1000);
-        rover.SetMotors(0,1);
-        rover.sleep(1000);
-        rover.SetMotors(0,-1);
-        rover.sleep(1000);
-        rover.SetMotors(0,0);
-
-        rover.PlaySound(300,1000);
-        rover.PlaySound(150,1000);
-
-        rover.io.P12.setDigitalValue(1);
-        wait_us(15);
-        rover.io.P12.setDigitalValue(0);
-        while (rover.io.P13.getDigitalValue() == 0) {}
-        uint32_t start = us_ticker_read();
-        while (rover.io.P13.getDigitalValue() == 1) {}
-        uint32_t end = us_ticker_read();
-        uint32_t distance = ((end-start)*170)*0.0001;
-        rover.serial.printf("%d %d %d\r\n", start, end, distance);
-#endif
-        rover.DetermineRange();
-        rover.sleep(100);
-        rover.serial.printf("%d\r\n", rover.ReadRange());
+        // If obsticles closer then slow speed
+        else if (rover.getRange() > 200)
+        {
+            rover.SetLED(1,0,0,1,0xff);
+            rover.SetMotors(0.5,0.5);
+            rover.sleep(50);
+        }
+        // If obsticles very close then scan for avoidance
+        else
+        {
+            rover.SetLED(1,1,0,0,0xff);
+            int n = 0;
+            do {
+                n++;
+                rover.SetMotors((n % 2)?0.5:-0.5,
+                                (n % 2)?-0.5:0.5);
+                rover.sleep(n*50);
+                rover.SetMotors(0,0);
+                rover.sleep(200);
+            } while (rover.getRange() <= 200);
+            rover.SetMotors((n % 2)?0.5:-0.5,
+                            (n % 2)?-0.5:0.5);
+            rover.sleep(50);
+        }
     }
 }
 

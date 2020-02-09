@@ -1,7 +1,7 @@
 /*  
 MIT License
 
-Copyright (c) 2019 Kevin Napper
+Copyright (c) 2019-2020 Kevin Napper
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ HC_SR04::HC_SR04(MicroBitPin& trigger, MicroBitPin& echo, MicroBitMessageBus& ms
     start(0),
     end(0),
     distance(0),
+    distanceSet(false),
     echoEventId(echoEventId)
 {
     // Enable event monitoring on the echo pin
@@ -43,13 +44,21 @@ HC_SR04::HC_SR04(MicroBitPin& trigger, MicroBitPin& echo, MicroBitMessageBus& ms
 
 void HC_SR04::determineDistance(int pulseWidthuS)
 {
+    // Invalidate current distance
+    distanceSet = false;
+
     // Send a pulse
     trigger.setDigitalValue(1);
     wait_us(pulseWidthuS);
     trigger.setDigitalValue(0);
 }
 
-int HC_SR04::readDistance()
+bool HC_SR04::distanceAvailable() const
+{
+    return distanceSet;
+}
+
+int HC_SR04::readDistance() const
 {
     return distance;
 }
@@ -67,4 +76,7 @@ void HC_SR04::echoEnd(MicroBitEvent)
     // multiplied by the speed of sound.
     static const float SPEED_OF_SOUND_mm_us = 0.343;
     distance = (float)(end-start)/2 * SPEED_OF_SOUND_mm_us;
+
+    // Record tha distance is now valid
+    distanceSet = true;
 }
