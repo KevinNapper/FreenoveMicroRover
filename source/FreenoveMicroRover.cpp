@@ -1,7 +1,7 @@
 /*  
 MIT License
 
-Copyright (c) 2019 Kevin Napper
+Copyright (c) 2019-2020 Kevin Napper
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -65,12 +65,12 @@ int FreenoveMicroRover::PlaySound(int frequency, int duration_ms)
     return 0;
 }
 
-void FreenoveMicroRover::DetermineRange()
+int FreenoveMicroRover::getRange()
 {
     ranger.determineDistance();
-}
-
-int FreenoveMicroRover::ReadRange()
-{
+    while (!ranger.distanceAvailable())
+    {
+        sleep(1);
+    }
     return ranger.readDistance();
 }

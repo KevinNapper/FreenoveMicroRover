@@ -1,7 +1,7 @@
 /*  
 MIT License
 
-Copyright (c) 2019 Kevin Napper
+Copyright (c) 2019-2020 Kevin Napper
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -48,8 +48,7 @@ class FreenoveMicroRover : public MicroBit
         int SetLED(float brightness, float R, float G, float B, uint8_t bitField = 0xff);
         int SetMotors(float leftSpeed, float rightSpeed);
         int PlaySound(int frequency, int duration_ms);
-        void DetermineRange();
-        int ReadRange();
+        int getRange();
 
     static ManagedString getName() {return "FreenoveMicroRover:" + MicroBit::getName();}
 };
